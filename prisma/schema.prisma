@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model PropBet {
+  id       Int         @id @default(autoincrement())
+  topic    String
+  choiceA  String
+  choiceB  String
+  order    Int         @unique
+  picks    Pick[]
+  answers  AnswerKey[]
+}
+
+model Entry {
+  id         Int      @id @default(autoincrement())
+  playerName String
+  createdAt  DateTime @default(now())
+  picks      Pick[]
+}
+
+model Pick {
+  id        Int     @id @default(autoincrement())
+  entry     Entry   @relation(fields: [entryId], references: [id])
+  entryId   Int
+  propBet   PropBet @relation(fields: [propBetId], references: [id])
+  propBetId Int
+  selection String  // "A" or "B"
+
+  @@unique([entryId, propBetId])
+}
+
+model AnswerKey {
+  id            Int     @id @default(autoincrement())
+  propBet       PropBet @relation(fields: [propBetId], references: [id])
+  propBetId     Int     @unique
+  correctChoice String  // "A" or "B"
+}
