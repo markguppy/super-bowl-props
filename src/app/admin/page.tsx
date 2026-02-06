@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 interface PropBet {
@@ -25,6 +26,7 @@ interface Entry {
 }
 
 export default function AdminPage() {
+  const router = useRouter();
   const [props, setProps] = useState<PropBet[]>([]);
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [existingAnswers, setExistingAnswers] = useState<Record<number, string>>({});
@@ -40,6 +42,11 @@ export default function AdminPage() {
   const [uploadMessage, setUploadMessage] = useState("");
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleLogout = async () => {
+    await fetch("/api/auth/logout", { method: "POST" });
+    router.push("/login");
+  };
 
   useEffect(() => {
     fetch("/api/props")
@@ -190,10 +197,20 @@ export default function AdminPage() {
 
   return (
     <main className="min-h-screen p-8 max-w-4xl mx-auto">
-      <Link href="/" className="text-yellow-400 hover:underline mb-6 inline-block">
-        &larr; Back to Home
-      </Link>
-      <h1 className="text-4xl font-bold text-yellow-400 mb-8">Admin Panel</h1>
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <Link href="/" className="text-yellow-400 hover:underline mb-2 inline-block">
+            &larr; Back to Home
+          </Link>
+          <h1 className="text-4xl font-bold text-yellow-400">Admin Panel</h1>
+        </div>
+        <button
+          onClick={handleLogout}
+          className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-5 rounded-lg transition-colors text-sm"
+        >
+          Log Out
+        </button>
+      </div>
 
       {/* Edit Questions Section */}
       <section className="mb-12">

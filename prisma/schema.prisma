@@ -42,3 +42,9 @@ model AnswerKey {
   propBetId     Int     @unique
   correctChoice String  // "A" or "B"
 }
+
+model AdminUser {
+  id           Int    @id @default(autoincrement())
+  username     String @unique
+  passwordHash String
+}

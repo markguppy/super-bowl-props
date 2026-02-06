@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getAuthFromRequest } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -11,6 +12,11 @@ export async function GET() {
 }
 
 export async function PUT(request: NextRequest) {
+  const auth = await getAuthFromRequest(request);
+  if (!auth) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const body = await request.json();
   const { id, topic, choiceA, choiceB } = body as {
     id: number;
@@ -35,6 +41,11 @@ export async function PUT(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const auth = await getAuthFromRequest(request);
+  if (!auth) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const body = await request.json();
   const { props } = body as {
     props: { topic: string; choiceA: string; choiceB: string }[];
