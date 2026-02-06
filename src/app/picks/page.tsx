@@ -160,6 +160,19 @@ export default function PicksPage() {
           ))}
         </div>
 
+        {/* Venmo Payment */}
+        <div className="mt-10 bg-gray-800 rounded-lg p-6 border border-gray-700 text-center">
+          <h2 className="text-xl font-bold mb-2">Entry Fee: $20</h2>
+          <p className="text-gray-400 mb-4">
+            Send payment via Venmo to <span className="text-white font-semibold">@Mark-Guppy</span> to complete your entry.
+          </p>
+          <img
+            src="/venmo.png"
+            alt="Venmo QR code for @Mark-Guppy"
+            className="mx-auto w-48 h-48 rounded-lg"
+          />
+        </div>
+
         {error && (
           <p className="text-red-400 mt-6 text-lg font-semibold">{error}</p>
         )}
