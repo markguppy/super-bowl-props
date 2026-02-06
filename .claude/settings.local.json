@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-next-app@14:*)",
+      "Bash(npm init:*)",
+      "Bash(npm install:*)",
+      "Bash(npx prisma migrate dev:*)",
+      "Bash(PRISMA_ENGINES_MIRROR=\"https://binaries.prisma.sh\" npx prisma migrate dev:*)",
+      "Bash(PRISMA_ENGINES_DIR=/tmp/prisma-engines npx prisma migrate:*)",
+      "Bash(chmod:*)",
+      "Bash(PRISMA_QUERY_ENGINE_LIBRARY=/tmp/prisma-cache/prisma/master/c2990dca591cba766e3b7ef5d9e8a84796e47ab7/darwin-arm64/libquery-engine PRISMA_SCHEMA_ENGINE_BINARY=/tmp/prisma-cache/prisma/master/c2990dca591cba766e3b7ef5d9e8a84796e47ab7/darwin-arm64/schema-engine npx prisma migrate dev:*)",
+      "Bash(PRISMA_QUERY_ENGINE_LIBRARY=/tmp/prisma-cache/master/c2990dca591cba766e3b7ef5d9e8a84796e47ab7/darwin-arm64/libquery-engine PRISMA_SCHEMA_ENGINE_BINARY=/tmp/prisma-cache/master/c2990dca591cba766e3b7ef5d9e8a84796e47ab7/darwin-arm64/schema-engine npx prisma migrate:*)",
+      "Bash(npx prisma db seed:*)",
+      "Bash(PRISMA_QUERY_ENGINE_LIBRARY=/tmp/prisma-cache/master/c2990dca591cba766e3b7ef5d9e8a84796e47ab7/darwin-arm64/libquery-engine PRISMA_SCHEMA_ENGINE_BINARY=/tmp/prisma-cache/master/c2990dca591cba766e3b7ef5d9e8a84796e47ab7/darwin-arm64/schema-engine npx prisma db seed:*)",
+      "Bash(npm run build:*)",
+      "Bash(curl:*)",
+      "Bash(python3:*)",
+      "Bash(pkill:*)",
+      "Bash(git init:*)",
+      "Bash(git -C /Users/markguppy/git/super-bowl-props status)",
+      "Bash(git -C /Users/markguppy/git/super-bowl-props add:*)",
+      "Bash(git -C /Users/markguppy/git/super-bowl-props diff --cached --stat)",
+      "Bash(git -C /Users/markguppy/git/super-bowl-props commit -m \"$\\(cat <<''EOF''\nInitial Super Bowl prop bets app\n\nFull-stack Next.js 14 app with Prisma/SQLite where users submit picks\nfor 25 Super Bowl prop bets, admin sets answer key, and scores are\ncalculated. Includes JSON file upload for bulk question replacement\nand inline editing of questions from the admin panel.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(gh auth status:*)",
+      "Bash(gh repo create:*)"
+    ]
+  }
+}
