@@ -19,10 +19,11 @@ model PropBet {
 }
 
 model Entry {
-  id         Int      @id @default(autoincrement())
-  playerName String
-  createdAt  DateTime @default(now())
-  picks      Pick[]
+  id            Int      @id @default(autoincrement())
+  playerName    String
+  venmoUsername String
+  createdAt     DateTime @default(now())
+  picks         Pick[]
 }
 
 model Pick {

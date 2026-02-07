@@ -5,14 +5,15 @@ export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
-  const { playerName, picks } = body as {
+  const { playerName, venmoUsername, picks } = body as {
     playerName: string;
+    venmoUsername: string;
     picks: { propBetId: number; selection: string }[];
   };
 
-  if (!playerName || !picks || picks.length !== 25) {
+  if (!playerName || !venmoUsername || !picks || picks.length !== 25) {
     return NextResponse.json(
-      { error: "Player name and 25 picks are required" },
+      { error: "Player name, Venmo username, and 25 picks are required" },
       { status: 400 }
     );
   }
@@ -20,6 +21,7 @@ export async function POST(request: NextRequest) {
   const entry = await prisma.entry.create({
     data: {
       playerName,
+      venmoUsername,
       picks: {
         create: picks.map((p) => ({
           propBetId: p.propBetId,

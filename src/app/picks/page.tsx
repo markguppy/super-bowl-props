@@ -14,6 +14,7 @@ interface PropBet {
 export default function PicksPage() {
   const [props, setProps] = useState<PropBet[]>([]);
   const [playerName, setPlayerName] = useState("");
+  const [venmoUsername, setVenmoUsername] = useState("");
   const [selections, setSelections] = useState<Record<number, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -31,6 +32,11 @@ export default function PicksPage() {
 
     if (!playerName.trim()) {
       setError("Please enter your name.");
+      return;
+    }
+
+    if (!venmoUsername.trim()) {
+      setError("Please enter your Venmo username.");
       return;
     }
 
@@ -52,7 +58,7 @@ export default function PicksPage() {
     const res = await fetch("/api/entries", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ playerName: playerName.trim(), picks }),
+      body: JSON.stringify({ playerName: playerName.trim(), venmoUsername: venmoUsername.trim(), picks }),
     });
 
     if (res.ok) {
@@ -171,6 +177,24 @@ export default function PicksPage() {
             alt="Venmo QR code for @Mark-Guppy"
             className="mx-auto w-48 h-48 rounded-lg"
           />
+          <div className="mt-6 max-w-sm mx-auto">
+            <label className="block text-sm font-semibold mb-1 text-left">
+              Your Venmo Username
+            </label>
+            <p className="text-gray-400 text-sm mb-2 text-left">
+              Used to match your payment to this entry.
+            </p>
+            <input
+              type="text"
+              value={venmoUsername}
+              onChange={(e) => setVenmoUsername(e.target.value)}
+              className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-600 text-white text-lg focus:outline-none focus:border-yellow-400"
+              placeholder="@your-venmo"
+            />
+          </div>
+          <p className="mt-4 text-red-400 text-sm font-semibold">
+            Entries without payment will be deleted at the national anthem.
+          </p>
         </div>
 
         {error && (
