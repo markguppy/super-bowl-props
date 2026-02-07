@@ -74,7 +74,7 @@ export default function PicksPage() {
     return (
       <main className="min-h-screen flex flex-col items-center justify-center p-8">
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-green-400 mb-4">
+          <h1 className="text-4xl font-bold text-seahawks-green mb-4">
             Picks Submitted!
           </h1>
           <p className="text-xl text-gray-300 mb-8">
@@ -82,7 +82,7 @@ export default function PicksPage() {
           </p>
           <Link
             href="/"
-            className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition-colors"
+            className="bg-surface-700 hover:bg-surface-600 text-white font-bold py-3 px-6 rounded-lg transition-colors"
           >
             Back to Home
           </Link>
@@ -93,10 +93,10 @@ export default function PicksPage() {
 
   return (
     <main className="min-h-screen p-8 max-w-3xl mx-auto">
-      <Link href="/" className="text-yellow-400 hover:underline mb-6 inline-block">
+      <Link href="/" className="text-nfl-red hover:underline mb-6 inline-block">
         &larr; Back to Home
       </Link>
-      <h1 className="text-4xl font-bold text-yellow-400 mb-8">
+      <h1 className="text-4xl font-bold text-nfl-red mb-8">
         Submit Your Picks
       </h1>
 
@@ -107,7 +107,7 @@ export default function PicksPage() {
             type="text"
             value={playerName}
             onChange={(e) => setPlayerName(e.target.value)}
-            className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-600 text-white text-lg focus:outline-none focus:border-yellow-400"
+            className="w-full px-4 py-3 rounded-lg bg-surface-800 border border-surface-600 text-white text-lg focus:outline-none focus:border-nfl-red"
             placeholder="Enter your name"
           />
         </div>
@@ -116,18 +116,18 @@ export default function PicksPage() {
           {props.map((prop) => (
             <div
               key={prop.id}
-              className="bg-gray-800 rounded-lg p-5 border border-gray-700"
+              className="bg-surface-800 rounded-lg p-5 border border-surface-600"
             >
               <p className="font-semibold text-lg mb-3">
-                <span className="text-yellow-400">#{prop.order}.</span>{" "}
+                <span className="text-nfl-red">#{prop.order}.</span>{" "}
                 {prop.topic}
               </p>
               <div className="flex gap-4">
                 <label
                   className={`flex-1 cursor-pointer rounded-lg p-3 text-center border-2 transition-colors ${
                     selections[prop.id] === "A"
-                      ? "border-green-500 bg-green-900/40"
-                      : "border-gray-600 hover:border-gray-400"
+                      ? "border-seahawks-green bg-seahawks-green/20"
+                      : "border-surface-600 hover:border-gray-400"
                   }`}
                 >
                   <input
@@ -145,8 +145,8 @@ export default function PicksPage() {
                 <label
                   className={`flex-1 cursor-pointer rounded-lg p-3 text-center border-2 transition-colors ${
                     selections[prop.id] === "B"
-                      ? "border-green-500 bg-green-900/40"
-                      : "border-gray-600 hover:border-gray-400"
+                      ? "border-seahawks-green bg-seahawks-green/20"
+                      : "border-surface-600 hover:border-gray-400"
                   }`}
                 >
                   <input
@@ -167,7 +167,7 @@ export default function PicksPage() {
         </div>
 
         {/* Venmo Payment */}
-        <div className="mt-10 bg-gray-800 rounded-lg p-6 border border-gray-700 text-center">
+        <div className="mt-10 bg-surface-800 rounded-lg p-6 border border-surface-600 text-center">
           <h2 className="text-xl font-bold mb-2">Entry Fee: $20</h2>
           <p className="text-gray-400 mb-4">
             Send payment via Venmo to <span className="text-white font-semibold">@Mark-Guppy</span> to complete your entry.
@@ -188,7 +188,7 @@ export default function PicksPage() {
               type="text"
               value={venmoUsername}
               onChange={(e) => setVenmoUsername(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-600 text-white text-lg focus:outline-none focus:border-yellow-400"
+              className="w-full px-4 py-3 rounded-lg bg-surface-800 border border-surface-600 text-white text-lg focus:outline-none focus:border-nfl-red"
               placeholder="@your-venmo"
             />
           </div>
@@ -204,7 +204,7 @@ export default function PicksPage() {
         <button
           type="submit"
           disabled={submitting}
-          className="mt-8 w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-600 text-white font-bold py-4 rounded-lg text-xl transition-colors"
+          className="mt-8 w-full bg-nfl-red hover:bg-red-700 disabled:bg-surface-600 text-white font-bold py-4 rounded-lg text-xl transition-colors"
         >
           {submitting ? "Submitting..." : "Submit Picks"}
         </button>

@@ -35,10 +35,10 @@ export default function LoginPage() {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center p-8">
       <div className="w-full max-w-sm">
-        <Link href="/" className="text-yellow-400 hover:underline mb-6 inline-block">
+        <Link href="/" className="text-nfl-red hover:underline mb-6 inline-block">
           &larr; Back to Home
         </Link>
-        <h1 className="text-3xl font-bold text-yellow-400 mb-8">Admin Login</h1>
+        <h1 className="text-3xl font-bold text-nfl-red mb-8">Admin Login</h1>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -47,7 +47,7 @@ export default function LoginPage() {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-3 py-2 rounded bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-yellow-400"
+              className="w-full px-3 py-2 rounded bg-surface-800 border border-surface-600 text-white focus:outline-none focus:border-nfl-red"
               autoFocus
             />
           </div>
@@ -57,7 +57,7 @@ export default function LoginPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 rounded bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-yellow-400"
+              className="w-full px-3 py-2 rounded bg-surface-800 border border-surface-600 text-white focus:outline-none focus:border-nfl-red"
             />
           </div>
 
@@ -68,7 +68,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-yellow-600 hover:bg-yellow-700 disabled:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg text-lg transition-colors"
+            className="w-full bg-nfl-red hover:bg-red-700 disabled:bg-surface-600 text-white font-bold py-3 px-6 rounded-lg text-lg transition-colors"
           >
             {loading ? "Logging in..." : "Log In"}
           </button>

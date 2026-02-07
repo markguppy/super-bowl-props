@@ -199,14 +199,14 @@ export default function AdminPage() {
     <main className="min-h-screen p-8 max-w-4xl mx-auto">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <Link href="/" className="text-yellow-400 hover:underline mb-2 inline-block">
+          <Link href="/" className="text-nfl-red hover:underline mb-2 inline-block">
             &larr; Back to Home
           </Link>
-          <h1 className="text-4xl font-bold text-yellow-400">Admin Panel</h1>
+          <h1 className="text-4xl font-bold text-nfl-red">Admin Panel</h1>
         </div>
         <button
           onClick={handleLogout}
-          className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-5 rounded-lg transition-colors text-sm"
+          className="bg-surface-700 hover:bg-surface-600 text-white font-bold py-2 px-5 rounded-lg transition-colors text-sm"
         >
           Log Out
         </button>
@@ -216,17 +216,17 @@ export default function AdminPage() {
       <section className="mb-12">
         <h2 className="text-2xl font-bold mb-4">Edit Questions</h2>
 
-        <div className="bg-gray-800 rounded-lg p-5 border border-gray-700 mb-6">
+        <div className="bg-surface-800 rounded-lg p-5 border border-surface-600 mb-6">
           <h3 className="font-semibold mb-2">Upload JSON</h3>
           <p className="text-sm text-gray-400 mb-3">
             Upload a JSON file with an array of objects, each with{" "}
-            <code className="bg-gray-700 px-1 rounded">topic</code>,{" "}
-            <code className="bg-gray-700 px-1 rounded">choiceA</code>, and{" "}
-            <code className="bg-gray-700 px-1 rounded">choiceB</code>.
+            <code className="bg-surface-700 px-1 rounded">topic</code>,{" "}
+            <code className="bg-surface-700 px-1 rounded">choiceA</code>, and{" "}
+            <code className="bg-surface-700 px-1 rounded">choiceB</code>.
             This will replace all existing questions.
           </p>
           <div className="flex items-center gap-4">
-            <label className="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-5 rounded-lg transition-colors text-sm">
+            <label className="cursor-pointer bg-nfl-navy hover:bg-blue-900 text-white font-bold py-2 px-5 rounded-lg transition-colors text-sm">
               {uploading ? "Uploading..." : "Choose File"}
               <input
                 ref={fileInputRef}
@@ -242,7 +242,7 @@ export default function AdminPage() {
             <p
               className={`mt-3 text-sm font-semibold ${
                 uploadMessage.includes("Replaced")
-                  ? "text-green-400"
+                  ? "text-seahawks-green"
                   : "text-red-400"
               }`}
             >
@@ -255,7 +255,7 @@ export default function AdminPage() {
           {props.map((prop) => (
             <div
               key={prop.id}
-              className="bg-gray-800 rounded-lg p-4 border border-gray-700"
+              className="bg-surface-800 rounded-lg p-4 border border-surface-600"
             >
               {editingId === prop.id ? (
                 <div className="space-y-3">
@@ -265,7 +265,7 @@ export default function AdminPage() {
                       type="text"
                       value={editTopic}
                       onChange={(e) => setEditTopic(e.target.value)}
-                      className="w-full px-3 py-2 rounded bg-gray-700 border border-gray-600 text-white focus:outline-none focus:border-yellow-400"
+                      className="w-full px-3 py-2 rounded bg-surface-700 border border-surface-600 text-white focus:outline-none focus:border-nfl-red"
                     />
                   </div>
                   <div className="flex gap-4">
@@ -275,7 +275,7 @@ export default function AdminPage() {
                         type="text"
                         value={editChoiceA}
                         onChange={(e) => setEditChoiceA(e.target.value)}
-                        className="w-full px-3 py-2 rounded bg-gray-700 border border-gray-600 text-white focus:outline-none focus:border-yellow-400"
+                        className="w-full px-3 py-2 rounded bg-surface-700 border border-surface-600 text-white focus:outline-none focus:border-nfl-red"
                       />
                     </div>
                     <div className="flex-1">
@@ -284,7 +284,7 @@ export default function AdminPage() {
                         type="text"
                         value={editChoiceB}
                         onChange={(e) => setEditChoiceB(e.target.value)}
-                        className="w-full px-3 py-2 rounded bg-gray-700 border border-gray-600 text-white focus:outline-none focus:border-yellow-400"
+                        className="w-full px-3 py-2 rounded bg-surface-700 border border-surface-600 text-white focus:outline-none focus:border-nfl-red"
                       />
                     </div>
                   </div>
@@ -292,13 +292,13 @@ export default function AdminPage() {
                     <button
                       onClick={() => saveEdit(prop.id)}
                       disabled={editSaving}
-                      className="bg-green-600 hover:bg-green-700 disabled:bg-gray-600 text-white font-bold py-2 px-4 rounded transition-colors text-sm"
+                      className="bg-seahawks-green hover:bg-green-600 disabled:bg-surface-600 text-white font-bold py-2 px-4 rounded transition-colors text-sm"
                     >
                       {editSaving ? "Saving..." : "Save"}
                     </button>
                     <button
                       onClick={cancelEditing}
-                      className="bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded transition-colors text-sm"
+                      className="bg-surface-600 hover:bg-surface-500 text-white font-bold py-2 px-4 rounded transition-colors text-sm"
                     >
                       Cancel
                     </button>
@@ -308,7 +308,7 @@ export default function AdminPage() {
                 <div className="flex items-center gap-3">
                   <div className="flex-1">
                     <p className="font-semibold">
-                      <span className="text-yellow-400">#{prop.order}.</span>{" "}
+                      <span className="text-nfl-red">#{prop.order}.</span>{" "}
                       {prop.topic}
                     </p>
                     <p className="text-sm text-gray-400 mt-1">
@@ -317,7 +317,7 @@ export default function AdminPage() {
                   </div>
                   <button
                     onClick={() => startEditing(prop)}
-                    className="bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded transition-colors text-sm"
+                    className="bg-surface-700 hover:bg-surface-600 text-white py-2 px-4 rounded transition-colors text-sm"
                   >
                     Edit
                   </button>
@@ -336,18 +336,18 @@ export default function AdminPage() {
             {props.map((prop) => (
               <div
                 key={prop.id}
-                className="bg-gray-800 rounded-lg p-4 border border-gray-700 flex flex-col sm:flex-row sm:items-center gap-3"
+                className="bg-surface-800 rounded-lg p-4 border border-surface-600 flex flex-col sm:flex-row sm:items-center gap-3"
               >
                 <p className="font-semibold flex-1">
-                  <span className="text-yellow-400">#{prop.order}.</span>{" "}
+                  <span className="text-nfl-red">#{prop.order}.</span>{" "}
                   {prop.topic}
                 </p>
                 <div className="flex gap-3">
                   <label
                     className={`cursor-pointer rounded-lg px-4 py-2 text-center border-2 transition-colors ${
                       answers[prop.id] === "A"
-                        ? "border-green-500 bg-green-900/40"
-                        : "border-gray-600 hover:border-gray-400"
+                        ? "border-seahawks-green bg-seahawks-green/20"
+                        : "border-surface-600 hover:border-gray-400"
                     }`}
                   >
                     <input
@@ -365,8 +365,8 @@ export default function AdminPage() {
                   <label
                     className={`cursor-pointer rounded-lg px-4 py-2 text-center border-2 transition-colors ${
                       answers[prop.id] === "B"
-                        ? "border-green-500 bg-green-900/40"
-                        : "border-gray-600 hover:border-gray-400"
+                        ? "border-seahawks-green bg-seahawks-green/20"
+                        : "border-surface-600 hover:border-gray-400"
                     }`}
                   >
                     <input
@@ -389,7 +389,7 @@ export default function AdminPage() {
           {message && (
             <p
               className={`mt-4 text-lg font-semibold ${
-                message.includes("saved") ? "text-green-400" : "text-red-400"
+                message.includes("saved") ? "text-seahawks-green" : "text-red-400"
               }`}
             >
               {message}
@@ -399,7 +399,7 @@ export default function AdminPage() {
           <button
             type="submit"
             disabled={saving}
-            className="mt-6 bg-yellow-600 hover:bg-yellow-700 disabled:bg-gray-600 text-white font-bold py-3 px-8 rounded-lg text-lg transition-colors"
+            className="mt-6 bg-nfl-red hover:bg-red-700 disabled:bg-surface-600 text-white font-bold py-3 px-8 rounded-lg text-lg transition-colors"
           >
             {saving ? "Saving..." : "Save Answer Key"}
           </button>
@@ -414,7 +414,7 @@ export default function AdminPage() {
         {entries.length === 0 ? (
           <p className="text-gray-400">No entries yet.</p>
         ) : (
-          <div className="bg-gray-800 rounded-lg border border-gray-700 divide-y divide-gray-700">
+          <div className="bg-surface-800 rounded-lg border border-surface-600 divide-y divide-surface-600">
             {entries.map((entry) => (
               <div key={entry.id} className="p-4 flex justify-between">
                 <span className="font-medium">{entry.playerName}</span>
@@ -437,8 +437,8 @@ export default function AdminPage() {
         ) : scores.length === 0 ? (
           <p className="text-gray-400">No entries to score yet.</p>
         ) : (
-          <div className="bg-gray-800 rounded-lg border border-gray-700">
-            <div className="grid grid-cols-3 gap-4 p-4 border-b border-gray-600 font-bold text-yellow-400">
+          <div className="bg-surface-800 rounded-lg border border-surface-600">
+            <div className="grid grid-cols-3 gap-4 p-4 border-b border-surface-600 font-bold text-nfl-red">
               <span>Rank</span>
               <span>Player</span>
               <span className="text-right">Score</span>
@@ -447,8 +447,8 @@ export default function AdminPage() {
               <div
                 key={entry.id}
                 className={`grid grid-cols-3 gap-4 p-4 ${
-                  idx < scores.length - 1 ? "border-b border-gray-700" : ""
-                } ${idx === 0 ? "bg-yellow-900/20" : ""}`}
+                  idx < scores.length - 1 ? "border-b border-surface-600" : ""
+                } ${idx === 0 ? "bg-nfl-red/10" : ""}`}
               >
                 <span className="font-bold">
                   {idx === 0 ? "1st" : idx === 1 ? "2nd" : idx === 2 ? "3rd" : `${idx + 1}th`}
