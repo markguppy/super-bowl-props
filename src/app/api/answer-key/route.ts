@@ -16,17 +16,18 @@ export async function POST(request: NextRequest) {
     tiebreakerAnswer?: number;
   };
 
-  const propCount = await prisma.propBet.count();
-
-  if (!answers || answers.length !== propCount) {
+  if (!answers || !Array.isArray(answers)) {
     return NextResponse.json(
-      { error: `All ${propCount} answers are required` },
+      { error: "answers array is required" },
       { status: 400 }
     );
   }
 
-  // Upsert each answer
-  for (const answer of answers) {
+  const withChoice = answers.filter((a) => a.correctChoice);
+  const withoutChoice = answers.filter((a) => !a.correctChoice);
+
+  // Upsert answers that have a correctChoice
+  for (const answer of withChoice) {
     await prisma.answerKey.upsert({
       where: { propBetId: answer.propBetId },
       update: { correctChoice: answer.correctChoice },
@@ -34,6 +35,13 @@ export async function POST(request: NextRequest) {
         propBetId: answer.propBetId,
         correctChoice: answer.correctChoice,
       },
+    });
+  }
+
+  // Delete answer key rows where admin cleared a previously-set answer
+  for (const answer of withoutChoice) {
+    await prisma.answerKey.deleteMany({
+      where: { propBetId: answer.propBetId },
     });
   }
 

@@ -13,8 +13,6 @@ export async function GET() {
     });
   }
 
-  const propCount = await prisma.propBet.count();
-
   const answerMap = new Map(
     answerKeys.map((a) => [a.propBetId, a.correctChoice])
   );
@@ -42,7 +40,7 @@ export async function GET() {
         id: entry.id,
         playerName: entry.playerName,
         score,
-        total: propCount,
+        total: answerKeys.length,
         tiebreaker: entry.tiebreaker,
         tiebreakerDiff,
       };

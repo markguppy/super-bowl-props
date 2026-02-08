@@ -66,11 +66,12 @@ export default function ScoreboardPage() {
             <span className="text-right">Diff</span>
           </div>
           {scores.map((entry, idx) => (
-            <div
+            <Link
               key={entry.id}
-              className={`grid grid-cols-5 gap-4 p-4 min-w-[500px] ${
+              href={`/entry/${entry.id}`}
+              className={`grid grid-cols-5 gap-4 p-4 min-w-[500px] hover:bg-surface-700 transition-colors cursor-pointer ${
                 idx < scores.length - 1 ? "border-b border-surface-600" : ""
-              } ${idx === 0 ? "bg-nfl-red/10" : ""}`}
+              } ${idx === 0 ? "bg-nfl-red/10 hover:bg-nfl-red/20" : ""}`}
             >
               <span className="font-bold">{rankLabel(idx)}</span>
               <span>{entry.playerName}</span>
@@ -83,7 +84,7 @@ export default function ScoreboardPage() {
               <span className="text-right font-mono text-gray-400">
                 {entry.tiebreakerDiff != null ? `±${entry.tiebreakerDiff}` : "—"}
               </span>
-            </div>
+            </Link>
           ))}
         </div>
       )}

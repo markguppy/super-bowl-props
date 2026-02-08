@@ -92,17 +92,11 @@ export default function AdminPage() {
     e.preventDefault();
     setMessage("");
 
-    const unanswered = props.filter((p) => !answers[p.id]);
-    if (unanswered.length > 0) {
-      setMessage(`Please set all ${props.length} answers. ${unanswered.length} remaining.`);
-      return;
-    }
-
     setSaving(true);
 
     const answerList = props.map((p) => ({
       propBetId: p.id,
-      correctChoice: answers[p.id],
+      correctChoice: answers[p.id] || "",
     }));
 
     const tiebreakerNum = tiebreakerAnswer.trim()
@@ -116,7 +110,8 @@ export default function AdminPage() {
     });
 
     if (res.ok) {
-      setMessage("Answer key saved!");
+      const answered = Object.values(answers).filter(Boolean).length;
+      setMessage(`Answer key saved! (${answered}/${props.length} answered)`);
       setExistingAnswers({ ...answers });
       // Refresh scoreboard
       const scoreRes = await fetch("/api/scoreboard");
@@ -420,44 +415,48 @@ export default function AdminPage() {
                   {prop.topic}
                 </p>
                 <div className="flex gap-3">
-                  <label
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setAnswers((a) => {
+                        const copy = { ...a };
+                        if (copy[prop.id] === "A") {
+                          delete copy[prop.id];
+                        } else {
+                          copy[prop.id] = "A";
+                        }
+                        return copy;
+                      })
+                    }
                     className={`cursor-pointer rounded-lg px-4 py-2 text-center border-2 transition-colors ${
                       answers[prop.id] === "A"
                         ? "border-seahawks-green bg-seahawks-green/20"
                         : "border-surface-600 hover:border-gray-400"
                     }`}
                   >
-                    <input
-                      type="radio"
-                      name={`answer-${prop.id}`}
-                      value="A"
-                      checked={answers[prop.id] === "A"}
-                      onChange={() =>
-                        setAnswers((a) => ({ ...a, [prop.id]: "A" }))
-                      }
-                      className="sr-only"
-                    />
                     <span className="text-sm font-medium">{prop.choiceA}</span>
-                  </label>
-                  <label
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setAnswers((a) => {
+                        const copy = { ...a };
+                        if (copy[prop.id] === "B") {
+                          delete copy[prop.id];
+                        } else {
+                          copy[prop.id] = "B";
+                        }
+                        return copy;
+                      })
+                    }
                     className={`cursor-pointer rounded-lg px-4 py-2 text-center border-2 transition-colors ${
                       answers[prop.id] === "B"
                         ? "border-seahawks-green bg-seahawks-green/20"
                         : "border-surface-600 hover:border-gray-400"
                     }`}
                   >
-                    <input
-                      type="radio"
-                      name={`answer-${prop.id}`}
-                      value="B"
-                      checked={answers[prop.id] === "B"}
-                      onChange={() =>
-                        setAnswers((a) => ({ ...a, [prop.id]: "B" }))
-                      }
-                      className="sr-only"
-                    />
                     <span className="text-sm font-medium">{prop.choiceB}</span>
-                  </label>
+                  </button>
                 </div>
               </div>
             ))}
