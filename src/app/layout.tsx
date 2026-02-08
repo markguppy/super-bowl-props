@@ -4,8 +4,21 @@ import Link from "next/link";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : "http://localhost:3000"
+  ),
   title: "Super Bowl LX Prop Bets",
   description: "Make your Super Bowl LX prop bet picks and see how you stack up!",
+  openGraph: {
+    title: "Super Bowl LX Prop Bets",
+    description: "Make your Super Bowl LX prop bet picks and see how you stack up!",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
 };
 
 export default function RootLayout({
