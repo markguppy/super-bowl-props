@@ -1,7 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
+import { getAuthFromCookies } from "@/lib/auth";
 
-export default function Home() {
+export default async function Home() {
+  const auth = await getAuthFromCookies();
   return (
     <main className="min-h-screen flex flex-col items-center justify-center p-8">
       <div className="text-center max-w-2xl">
@@ -56,14 +58,16 @@ export default function Home() {
             href="/picks"
             className="bg-nfl-red hover:bg-red-700 text-white font-bold py-4 px-8 rounded-lg text-xl transition-colors"
           >
-            Submit Your Picks
+            Make Your Picks
           </Link>
-          <Link
-            href="/admin"
-            className="bg-surface-700 hover:bg-surface-600 text-white font-bold py-4 px-8 rounded-lg text-xl transition-colors"
-          >
-            Admin / Scoreboard
-          </Link>
+          {auth && (
+            <Link
+              href="/admin"
+              className="bg-surface-700 hover:bg-surface-600 text-white font-bold py-4 px-8 rounded-lg text-xl transition-colors"
+            >
+              Admin / Scoreboard
+            </Link>
+          )}
         </div>
       </div>
     </main>
