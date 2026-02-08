@@ -191,7 +191,7 @@ export default function PicksPage() {
 
         {/* Venmo Payment */}
         <div className="mt-10 bg-surface-800 rounded-lg p-6 border border-surface-600 text-center">
-          <h2 className="text-xl font-bold mb-2">Entry Fee: $20</h2>
+          <h2 className="text-xl font-bold mb-2">Entry Fee: $10</h2>
           <p className="text-gray-400 mb-4">
             Send payment via Venmo to <span className="text-white font-semibold">@Mark-Guppy</span> to complete your entry.
           </p>
