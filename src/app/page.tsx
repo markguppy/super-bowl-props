@@ -60,12 +60,18 @@ export default async function Home() {
           >
             Make Your Picks
           </Link>
+          <Link
+            href="/scoreboard"
+            className="bg-surface-700 hover:bg-surface-600 text-white font-bold py-4 px-8 rounded-lg text-xl transition-colors"
+          >
+            Scoreboard
+          </Link>
           {auth && (
             <Link
               href="/admin"
               className="bg-surface-700 hover:bg-surface-600 text-white font-bold py-4 px-8 rounded-lg text-xl transition-colors"
             >
-              Admin / Scoreboard
+              Admin Panel
             </Link>
           )}
         </div>
