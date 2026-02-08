@@ -19,17 +19,27 @@ export default function PicksPage() {
   const [tiebreaker, setTiebreaker] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [submissionsClosed, setSubmissionsClosed] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
     fetch("/api/props")
       .then((res) => res.json())
       .then((data) => setProps(data));
+
+    fetch("/api/settings")
+      .then((res) => res.json())
+      .then((data) => setSubmissionsClosed(data.submissionsClosed));
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+
+    if (submissionsClosed) {
+      setError("Submissions are closed.");
+      return;
+    }
 
     if (!playerName.trim()) {
       setError("Please enter your name.");
@@ -106,6 +116,13 @@ export default function PicksPage() {
       <h1 className="text-4xl font-bold text-nfl-red mb-8">
         Submit Your Picks
       </h1>
+
+      {submissionsClosed && (
+        <div className="bg-red-900/30 border border-red-400/50 rounded-lg p-4 mb-8 text-center">
+          <p className="text-red-400 font-bold text-lg">Submissions are closed</p>
+          <p className="text-gray-400 text-sm mt-1">The deadline to submit picks has passed.</p>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit}>
         <div className="mb-8">
@@ -226,10 +243,10 @@ export default function PicksPage() {
 
         <button
           type="submit"
-          disabled={submitting}
+          disabled={submitting || submissionsClosed}
           className="mt-8 w-full bg-nfl-red hover:bg-red-700 disabled:bg-surface-600 text-white font-bold py-4 rounded-lg text-xl transition-colors"
         >
-          {submitting ? "Submitting..." : "Submit Picks"}
+          {submissionsClosed ? "Submissions Closed" : submitting ? "Submitting..." : "Submit Picks"}
         </button>
       </form>
     </main>

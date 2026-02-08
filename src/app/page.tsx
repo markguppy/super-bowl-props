@@ -1,9 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { getAuthFromCookies } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 
 export default async function Home() {
   const auth = await getAuthFromCookies();
+  const settings = await prisma.settings.findUnique({ where: { id: 1 } });
+  const submissionsClosed = settings?.submissionsClosed ?? false;
   return (
     <main className="min-h-screen flex flex-col items-center justify-center p-8">
       <div className="text-center max-w-2xl">
@@ -52,14 +55,23 @@ export default async function Home() {
           Make your Super Bowl prop bet picks and see how you stack up
           against the competition!
         </p>
+        <p className="text-lg text-gray-300 mb-10">
+          The most correct picks wins the whole pot. The pot amount will depend on the number of entries.
+        </p>
 
         <div className="flex flex-col sm:flex-row gap-5 justify-center">
-          <Link
-            href="/picks"
-            className="bg-nfl-red hover:bg-red-700 text-white font-bold py-4 px-8 rounded-lg text-xl transition-colors"
-          >
-            Make Your Picks
-          </Link>
+          {submissionsClosed ? (
+            <span className="bg-surface-600 text-gray-400 font-bold py-4 px-8 rounded-lg text-xl cursor-not-allowed">
+              Submissions Closed
+            </span>
+          ) : (
+            <Link
+              href="/picks"
+              className="bg-nfl-red hover:bg-red-700 text-white font-bold py-4 px-8 rounded-lg text-xl transition-colors"
+            >
+              Make Your Picks
+            </Link>
+          )}
           <Link
             href="/scoreboard"
             className="bg-surface-700 hover:bg-surface-600 text-white font-bold py-4 px-8 rounded-lg text-xl transition-colors"

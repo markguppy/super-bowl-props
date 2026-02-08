@@ -55,3 +55,8 @@ model AdminUser {
   username     String @unique
   passwordHash String
 }
+
+model Settings {
+  id                Int     @id @default(1)
+  submissionsClosed Boolean @default(false)
+}

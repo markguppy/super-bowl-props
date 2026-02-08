@@ -46,6 +46,8 @@ export default function AdminPage() {
   const [uploadMessage, setUploadMessage] = useState("");
   const [uploading, setUploading] = useState(false);
   const [deletingId, setDeletingId] = useState<number | null>(null);
+  const [submissionsClosed, setSubmissionsClosed] = useState(false);
+  const [togglingSubmissions, setTogglingSubmissions] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleLogout = async () => {
@@ -80,6 +82,10 @@ export default function AdminPage() {
     fetch("/api/scoreboard")
       .then((res) => res.json())
       .then((data) => setScores(data.scores || []));
+
+    fetch("/api/settings")
+      .then((res) => res.json())
+      .then((data) => setSubmissionsClosed(data.submissionsClosed));
   }, []);
 
   const handleSaveAnswers = async (e: React.FormEvent) => {
@@ -208,6 +214,20 @@ export default function AdminPage() {
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
+  const handleToggleSubmissions = async () => {
+    setTogglingSubmissions(true);
+    const res = await fetch("/api/settings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ submissionsClosed: !submissionsClosed }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      setSubmissionsClosed(data.submissionsClosed);
+    }
+    setTogglingSubmissions(false);
+  };
+
   const handleDeleteEntry = async (id: number, playerName: string) => {
     if (!confirm(`Delete entry from ${playerName}? This cannot be undone.`)) return;
 
@@ -241,6 +261,33 @@ export default function AdminPage() {
           Log Out
         </button>
       </div>
+
+      {/* Submissions Toggle */}
+      <section className="mb-8">
+        <div className="bg-surface-800 rounded-lg p-5 border border-surface-600 flex items-center justify-between">
+          <div>
+            <h2 className="text-lg font-bold">Pick Submissions</h2>
+            <p className={`text-sm font-semibold mt-1 ${submissionsClosed ? "text-red-400" : "text-seahawks-green"}`}>
+              {submissionsClosed ? "Closed — no new picks allowed" : "Open — accepting picks"}
+            </p>
+          </div>
+          <button
+            onClick={handleToggleSubmissions}
+            disabled={togglingSubmissions}
+            className={`font-bold py-2 px-6 rounded-lg transition-colors text-sm ${
+              submissionsClosed
+                ? "bg-seahawks-green hover:bg-green-600 text-white"
+                : "bg-nfl-red hover:bg-red-700 text-white"
+            } disabled:bg-surface-600`}
+          >
+            {togglingSubmissions
+              ? "Updating..."
+              : submissionsClosed
+              ? "Open Submissions"
+              : "Close Submissions"}
+          </button>
+        </div>
+      </section>
 
       {/* Edit Questions Section */}
       <section className="mb-12">

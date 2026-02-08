@@ -5,6 +5,15 @@ import { getAuthFromRequest } from "@/lib/auth";
 export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
+  // Check if submissions are closed
+  const settings = await prisma.settings.findUnique({ where: { id: 1 } });
+  if (settings?.submissionsClosed) {
+    return NextResponse.json(
+      { error: "Submissions are closed." },
+      { status: 403 }
+    );
+  }
+
   const body = await request.json();
   const { playerName, venmoUsername, picks, tiebreaker } = body as {
     playerName: string;
