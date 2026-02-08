@@ -16,6 +16,7 @@ export default function PicksPage() {
   const [playerName, setPlayerName] = useState("");
   const [venmoUsername, setVenmoUsername] = useState("");
   const [selections, setSelections] = useState<Record<number, string>>({});
+  const [tiebreaker, setTiebreaker] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
@@ -43,8 +44,14 @@ export default function PicksPage() {
     const unanswered = props.filter((p) => !selections[p.id]);
     if (unanswered.length > 0) {
       setError(
-        `Please answer all 25 questions. You have ${unanswered.length} remaining.`
+        `Please answer all ${props.length} questions. You have ${unanswered.length} remaining.`
       );
+      return;
+    }
+
+    const tiebreakerNum = parseInt(tiebreaker, 10);
+    if (!tiebreaker.trim() || isNaN(tiebreakerNum) || tiebreakerNum < 0) {
+      setError("Please enter a valid tiebreaker (total points scored by both teams).");
       return;
     }
 
@@ -58,7 +65,7 @@ export default function PicksPage() {
     const res = await fetch("/api/entries", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ playerName: playerName.trim(), venmoUsername: venmoUsername.trim(), picks }),
+      body: JSON.stringify({ playerName: playerName.trim(), venmoUsername: venmoUsername.trim(), picks, tiebreaker: tiebreakerNum }),
     });
 
     if (res.ok) {
@@ -164,6 +171,22 @@ export default function PicksPage() {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Tiebreaker */}
+        <div className="mt-10 bg-surface-800 rounded-lg p-6 border border-surface-600">
+          <h2 className="text-xl font-bold mb-2">Tiebreaker</h2>
+          <p className="text-gray-400 mb-4">
+            Predict the total points scored by both teams combined.
+          </p>
+          <input
+            type="number"
+            min="0"
+            value={tiebreaker}
+            onChange={(e) => setTiebreaker(e.target.value)}
+            className="w-full px-4 py-3 rounded-lg bg-surface-800 border border-surface-600 text-white text-lg focus:outline-none focus:border-nfl-red"
+            placeholder="e.g. 47"
+          />
         </div>
 
         {/* Venmo Payment */}

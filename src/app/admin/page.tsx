@@ -17,6 +17,8 @@ interface ScoreEntry {
   playerName: string;
   score: number;
   total: number;
+  tiebreaker: number;
+  tiebreakerDiff: number | null;
 }
 
 interface Entry {
@@ -32,6 +34,7 @@ export default function AdminPage() {
   const [existingAnswers, setExistingAnswers] = useState<Record<number, string>>({});
   const [scores, setScores] = useState<ScoreEntry[]>([]);
   const [entries, setEntries] = useState<Entry[]>([]);
+  const [tiebreakerAnswer, setTiebreakerAnswer] = useState("");
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -41,6 +44,7 @@ export default function AdminPage() {
   const [editSaving, setEditSaving] = useState(false);
   const [uploadMessage, setUploadMessage] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleLogout = async () => {
@@ -56,12 +60,16 @@ export default function AdminPage() {
     fetch("/api/answer-key")
       .then((res) => res.json())
       .then((data) => {
+        const answerList = data.answers || data;
         const map: Record<number, string> = {};
-        for (const a of data) {
+        for (const a of answerList) {
           map[a.propBetId] = a.correctChoice;
         }
         setAnswers(map);
         setExistingAnswers(map);
+        if (data.tiebreakerAnswer != null) {
+          setTiebreakerAnswer(String(data.tiebreakerAnswer));
+        }
       });
 
     fetch("/api/entries")
@@ -79,7 +87,7 @@ export default function AdminPage() {
 
     const unanswered = props.filter((p) => !answers[p.id]);
     if (unanswered.length > 0) {
-      setMessage(`Please set all 25 answers. ${unanswered.length} remaining.`);
+      setMessage(`Please set all ${props.length} answers. ${unanswered.length} remaining.`);
       return;
     }
 
@@ -90,10 +98,14 @@ export default function AdminPage() {
       correctChoice: answers[p.id],
     }));
 
+    const tiebreakerNum = tiebreakerAnswer.trim()
+      ? parseInt(tiebreakerAnswer, 10)
+      : undefined;
+
     const res = await fetch("/api/answer-key", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ answers: answerList }),
+      body: JSON.stringify({ answers: answerList, tiebreakerAnswer: tiebreakerNum }),
     });
 
     if (res.ok) {
@@ -193,6 +205,23 @@ export default function AdminPage() {
 
     setUploading(false);
     if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const handleDeleteEntry = async (id: number, playerName: string) => {
+    if (!confirm(`Delete entry from ${playerName}? This cannot be undone.`)) return;
+
+    setDeletingId(id);
+    const res = await fetch("/api/entries", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    });
+
+    if (res.ok) {
+      setEntries((prev) => prev.filter((e) => e.id !== id));
+      setScores((prev) => prev.filter((s) => s.id !== id));
+    }
+    setDeletingId(null);
   };
 
   return (
@@ -386,6 +415,21 @@ export default function AdminPage() {
             ))}
           </div>
 
+          {/* Tiebreaker Answer */}
+          <div className="mt-6 bg-surface-800 rounded-lg p-4 border border-surface-600">
+            <label className="block font-semibold mb-2">
+              Tiebreaker: Total Points Scored by Both Teams
+            </label>
+            <input
+              type="number"
+              min="0"
+              value={tiebreakerAnswer}
+              onChange={(e) => setTiebreakerAnswer(e.target.value)}
+              className="w-full px-4 py-3 rounded-lg bg-surface-700 border border-surface-600 text-white text-lg focus:outline-none focus:border-nfl-red"
+              placeholder="e.g. 47"
+            />
+          </div>
+
           {message && (
             <p
               className={`mt-4 text-lg font-semibold ${
@@ -416,11 +460,20 @@ export default function AdminPage() {
         ) : (
           <div className="bg-surface-800 rounded-lg border border-surface-600 divide-y divide-surface-600">
             {entries.map((entry) => (
-              <div key={entry.id} className="p-4 flex justify-between">
+              <div key={entry.id} className="p-4 flex items-center justify-between gap-3">
                 <span className="font-medium">{entry.playerName}</span>
-                <span className="text-gray-400 text-sm">
-                  {new Date(entry.createdAt).toLocaleString()}
-                </span>
+                <div className="flex items-center gap-3">
+                  <span className="text-gray-400 text-sm">
+                    {new Date(entry.createdAt).toLocaleString()}
+                  </span>
+                  <button
+                    onClick={() => handleDeleteEntry(entry.id, entry.playerName)}
+                    disabled={deletingId === entry.id}
+                    className="text-red-400 hover:text-red-300 disabled:text-surface-500 text-sm font-semibold transition-colors"
+                  >
+                    {deletingId === entry.id ? "Deleting..." : "Delete"}
+                  </button>
+                </div>
               </div>
             ))}
           </div>
@@ -437,16 +490,18 @@ export default function AdminPage() {
         ) : scores.length === 0 ? (
           <p className="text-gray-400">No entries to score yet.</p>
         ) : (
-          <div className="bg-surface-800 rounded-lg border border-surface-600">
-            <div className="grid grid-cols-3 gap-4 p-4 border-b border-surface-600 font-bold text-nfl-red">
+          <div className="bg-surface-800 rounded-lg border border-surface-600 overflow-x-auto">
+            <div className="grid grid-cols-5 gap-4 p-4 border-b border-surface-600 font-bold text-nfl-red min-w-[500px]">
               <span>Rank</span>
               <span>Player</span>
               <span className="text-right">Score</span>
+              <span className="text-right">Tiebreaker</span>
+              <span className="text-right">Diff</span>
             </div>
             {scores.map((entry, idx) => (
               <div
                 key={entry.id}
-                className={`grid grid-cols-3 gap-4 p-4 ${
+                className={`grid grid-cols-5 gap-4 p-4 min-w-[500px] ${
                   idx < scores.length - 1 ? "border-b border-surface-600" : ""
                 } ${idx === 0 ? "bg-nfl-red/10" : ""}`}
               >
@@ -456,6 +511,12 @@ export default function AdminPage() {
                 <span>{entry.playerName}</span>
                 <span className="text-right font-mono text-lg">
                   {entry.score}/{entry.total}
+                </span>
+                <span className="text-right font-mono">
+                  {entry.tiebreaker}
+                </span>
+                <span className="text-right font-mono text-gray-400">
+                  {entry.tiebreakerDiff != null ? `±${entry.tiebreakerDiff}` : "—"}
                 </span>
               </div>
             ))}

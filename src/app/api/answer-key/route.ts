@@ -11,13 +11,16 @@ export async function POST(request: NextRequest) {
   }
 
   const body = await request.json();
-  const { answers } = body as {
+  const { answers, tiebreakerAnswer } = body as {
     answers: { propBetId: number; correctChoice: string }[];
+    tiebreakerAnswer?: number;
   };
 
-  if (!answers || answers.length !== 25) {
+  const propCount = await prisma.propBet.count();
+
+  if (!answers || answers.length !== propCount) {
     return NextResponse.json(
-      { error: "All 25 answers are required" },
+      { error: `All ${propCount} answers are required` },
       { status: 400 }
     );
   }
@@ -34,6 +37,15 @@ export async function POST(request: NextRequest) {
     });
   }
 
+  // Upsert tiebreaker answer if provided
+  if (tiebreakerAnswer != null) {
+    await prisma.tiebreakerAnswer.upsert({
+      where: { id: 1 },
+      update: { correctTotal: tiebreakerAnswer },
+      create: { id: 1, correctTotal: tiebreakerAnswer },
+    });
+  }
+
   return NextResponse.json({ success: true });
 }
 
@@ -42,5 +54,11 @@ export async function GET() {
     include: { propBet: true },
     orderBy: { propBet: { order: "asc" } },
   });
-  return NextResponse.json(answers);
+  const tiebreaker = await prisma.tiebreakerAnswer.findUnique({
+    where: { id: 1 },
+  });
+  return NextResponse.json({
+    answers,
+    tiebreakerAnswer: tiebreaker?.correctTotal ?? null,
+  });
 }

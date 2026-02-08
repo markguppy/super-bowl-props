@@ -1,19 +1,30 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getAuthFromRequest } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
-  const { playerName, venmoUsername, picks } = body as {
+  const { playerName, venmoUsername, picks, tiebreaker } = body as {
     playerName: string;
     venmoUsername: string;
     picks: { propBetId: number; selection: string }[];
+    tiebreaker: number;
   };
 
-  if (!playerName || !venmoUsername || !picks || picks.length !== 25) {
+  const propCount = await prisma.propBet.count();
+
+  if (!playerName || !venmoUsername || !picks || picks.length !== propCount) {
     return NextResponse.json(
-      { error: "Player name, Venmo username, and 25 picks are required" },
+      { error: `Player name, Venmo username, and all ${propCount} picks are required` },
+      { status: 400 }
+    );
+  }
+
+  if (tiebreaker == null || !Number.isInteger(tiebreaker) || tiebreaker < 0) {
+    return NextResponse.json(
+      { error: "Tiebreaker must be a non-negative integer" },
       { status: 400 }
     );
   }
@@ -22,6 +33,7 @@ export async function POST(request: NextRequest) {
     data: {
       playerName,
       venmoUsername,
+      tiebreaker,
       picks: {
         create: picks.map((p) => ({
           propBetId: p.propBetId,
@@ -41,4 +53,23 @@ export async function GET() {
     orderBy: { createdAt: "desc" },
   });
   return NextResponse.json(entries);
+}
+
+export async function DELETE(request: NextRequest) {
+  const auth = await getAuthFromRequest(request);
+  if (!auth) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const { id } = (await request.json()) as { id: number };
+
+  if (!id) {
+    return NextResponse.json({ error: "Entry id is required" }, { status: 400 });
+  }
+
+  // Delete picks first (cascade), then the entry
+  await prisma.pick.deleteMany({ where: { entryId: id } });
+  await prisma.entry.delete({ where: { id } });
+
+  return NextResponse.json({ success: true });
 }

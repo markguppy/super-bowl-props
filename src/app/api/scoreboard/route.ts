@@ -13,9 +13,15 @@ export async function GET() {
     });
   }
 
+  const propCount = await prisma.propBet.count();
+
   const answerMap = new Map(
     answerKeys.map((a) => [a.propBetId, a.correctChoice])
   );
+
+  const tiebreakerAnswer = await prisma.tiebreakerAnswer.findUnique({
+    where: { id: 1 },
+  });
 
   const entries = await prisma.entry.findMany({
     include: { picks: true },
@@ -28,14 +34,26 @@ export async function GET() {
         return count + (pick.selection === correct ? 1 : 0);
       }, 0);
 
+      const tiebreakerDiff = tiebreakerAnswer
+        ? Math.abs(entry.tiebreaker - tiebreakerAnswer.correctTotal)
+        : null;
+
       return {
         id: entry.id,
         playerName: entry.playerName,
         score,
-        total: 25,
+        total: propCount,
+        tiebreaker: entry.tiebreaker,
+        tiebreakerDiff,
       };
     })
-    .sort((a, b) => b.score - a.score);
+    .sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      if (a.tiebreakerDiff != null && b.tiebreakerDiff != null) {
+        return a.tiebreakerDiff - b.tiebreakerDiff;
+      }
+      return 0;
+    });
 
   return NextResponse.json({ scores });
 }

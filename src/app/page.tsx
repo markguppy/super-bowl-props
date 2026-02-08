@@ -47,7 +47,7 @@ export default function Home() {
         </div>
 
         <p className="text-lg text-gray-300 mb-10">
-          Make your picks for 25 Super Bowl prop bets and see how you stack up
+          Make your Super Bowl prop bet picks and see how you stack up
           against the competition!
         </p>
 
