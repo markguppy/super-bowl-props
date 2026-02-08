@@ -24,6 +24,7 @@ interface ScoreEntry {
 interface Entry {
   id: number;
   playerName: string;
+  venmoUsername: string;
   createdAt: string;
 }
 
@@ -461,7 +462,9 @@ export default function AdminPage() {
           <div className="bg-surface-800 rounded-lg border border-surface-600 divide-y divide-surface-600">
             {entries.map((entry) => (
               <div key={entry.id} className="p-4 flex items-center justify-between gap-3">
-                <span className="font-medium">{entry.playerName}</span>
+                <span className="font-medium">
+                  {entry.playerName} <span className="text-gray-400 text-sm">({entry.venmoUsername})</span>
+                </span>
                 <div className="flex items-center gap-3">
                   <span className="text-gray-400 text-sm">
                     {new Date(entry.createdAt).toLocaleString()}
