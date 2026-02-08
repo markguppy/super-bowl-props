@@ -11,6 +11,9 @@ export const metadata: Metadata = {
   ),
   title: "Super Bowl LX Prop Bets",
   description: "Make your Super Bowl LX prop bet picks and see how you stack up!",
+  icons: {
+    icon: "/icon.svg",
+  },
   openGraph: {
     title: "Super Bowl LX Prop Bets",
     description: "Make your Super Bowl LX prop bet picks and see how you stack up!",
